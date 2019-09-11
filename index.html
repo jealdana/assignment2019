@@ -1,11 +1,71 @@
 <!DOCTYPE html>
 <html>
-<header></header>
-<body>
+<head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body >
     <main>
         <h1>Jesus Enrique Aldana Sigona's assignment</h1>
-        <section>Section1</section>
-        <section>Section2</section>
+        <section>
+            <h1>Section 1</h1>
+            <p>In this section,it's calculated the mean and median of the reads from the database</p>
+
+            <p>
+                <!-- Content is blank by default -->
+                mean:<spam id="sec11"></spam> and median <spam id="sec12"></spam>.
+            </p>
+
+            <!-- Include the JQuery library -->
+            <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+            <script>
+                //When the page has loaded send request for average reads.
+                $( document ).ready(function(){
+                    //Perform Ajax request.
+                    $.ajax({
+                        url: '/section1',
+                        type: 'post',
+                        success: function(data){
+                            //If the success function is execute,
+                            //then the Ajax request was successful.
+                            //Add the data we received in our Ajax
+                            //request to the "content" div.
+                            $('#sec11').html(data[0]);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+                            $('#sec11').html(errorMsg);
+                        }
+                    });
+                });
+                //When the page has loaded send request for median of reads.
+                $( document ).ready(function(){
+                    //Perform Ajax request.
+                    $.ajax({
+                        url: '/section1',
+                        type: 'post',
+                        success: function(data){
+                            //If the success function is execute,
+                            //then the Ajax request was successful.
+                            //Add the data we received in our Ajax
+                            //request to the "content" div.
+                            $('#sec12').html(data[1]);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+                            $('#sec12').html(errorMsg);
+                        }
+                    });
+                });
+            </script>
+        </section>
+        <section>
+            <h1>Section2</h1>
+            <p>In this section, it will be the plot of the comparison between reads and clicks</p></section>
+            <div>
+                <!--Charts-->
+            </div>
+
     </main>
 </body>
 <footer></footer>
