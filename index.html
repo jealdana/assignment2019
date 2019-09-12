@@ -5,6 +5,12 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.7.0/js/anychart-base.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+    </script>
+
     <script>
         //When the page has loaded send request for average reads.
         $(document).ready(function() {
@@ -15,8 +21,27 @@
                 success: function(data) {
                     var pageViews = data[0];
                     var pageClicks = data[1];
-                    function genericSort(index, arr) {arr.sort(function(a,b){return a[index] < b[index]})}
-                    console.log(genericSort(0, pageViews));
+                    var test = ["date","Page Views"];
+                    pageViews.push(test);
+                    console.log(pageViews.reverse());
+
+                    google.charts.load('current', {'packages':['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        var data = google.visualization.arrayToDataTable(pageViews
+
+                        );
+
+                        var options = {
+                            title: 'Page views',
+                            hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+                            vAxis: {minValue: 0}
+                        };
+
+                        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                        chart.draw(data, options);
+                    }
 
                     anychart.onDocumentLoad(function() {
                         // create data
@@ -128,14 +153,14 @@
         <section>
             <h1>Section2</h1>
             <p>In this section, it will be the plot of the comparison between reads and clicks</p>
+            <div>
+                <div id="pageViewsContainer"></div>
+                <div id="pageClicksContainer"></div>
+                <div id="chart_div"></div>
+            </div>
+
         </section>
-        <div>
 
-            <div id="pageViewsContainer"></div>
-            <div id="pageClicksContainer"></div>
-
-
-        </div>
     </main>
 </body>
 

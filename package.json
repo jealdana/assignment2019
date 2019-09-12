@@ -6,6 +6,7 @@
         "start": "node server.js"
     },
     "dependencies": {
+        "anychart": "^8.7.0",
         "chartjs": "^0.3.24",
         "cookie-parser": "~1.4.4",
         "csv-parser": "^2.3.0",
