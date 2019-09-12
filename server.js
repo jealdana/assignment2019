@@ -32,19 +32,72 @@ function section1(callback){
         let lowMiddle = Math.floor((values.length - 1) / 2);
         let highMiddle = Math.ceil((values.length - 1) / 2);
         let median = (values[lowMiddle] + values[highMiddle]) / 2;
-        ans.push(median);
-        // console.log(ans);
+        ans.push(median); // saving the result
+    });
+}
+
+var datapoints = [];
+
+function section2(){
+
+    const csv = require('csv-parser');
+    const fs = require('fs');
+    var values = [];
+    var read = fs.createReadStream('./jobentry_export_2019-8-23T9_59.csv')
+    .pipe(csv({ separator: ';' }))
+    .on('data', (row) => {
+        datapoints.push({
+            "date_created": row.date_created,
+            "pageviews_all": row.pageviews_all,
+            "applyclicks_all": row.applyclicks_all,
+        });
+        // console.log(datapoints);
+    })
+    .on('end', () => {
+        console.log('Section2: CSV file successfully processed');
+        //console.log(datapoints);
     });
 }
 
 
 
 section1();
+section2();
+
+// example usage
 
 app.use(myParser.urlencoded({extended : true}));
 app.post("/section1", function(req, res) {
     res.send(ans);
     });
+
+app.post("/section2", function(req, res) {
+    if (datapoints.length > 0){
+        var pageViews = [];
+        datapoints.reduce(function(res, value) {
+            if (!res[value.date_created]) {
+                res[value.date_created] = [ value.date_created, 0];
+                pageViews.push(res[value.date_created])
+            }
+            res[value.date_created][1] += parseInt(value.pageviews_all);
+            return res;
+        }, {});
+
+        var pageClicks = [];
+        datapoints.reduce(function(res, value) {
+            if (!res[value.date_created]) {
+                res[value.date_created] = [ value.date_created, 0];;
+                pageClicks.push(res[value.date_created])
+            }
+            res[value.date_created][1] += parseInt(value.applyclicks_all);
+            return res;
+        }, {});
+        console.log(pageViews);
+        // console.log("---");
+        // console.log(pageClicks);
+    }
+    res.send([pageViews,pageClicks]);
+});
 
 // Set the app to point to an "index" html file
 app.get('/', function(req, res) {
