@@ -15,7 +15,7 @@ function section1(callback){
     var read = fs.createReadStream('./jobentry_export_2019-8-23T9_59.csv')
         .pipe(csv({ separator: ';' }))
         .on('data', (row) => {
-        values.push(row.pageviews_all);
+        values.push(parseInt(row.pageviews_all));
     })
         .on('end', () => {
         console.log('CSV file successfully processed');
@@ -51,11 +51,9 @@ function section2(){
             "pageviews_all": row.pageviews_all,
             "applyclicks_all": row.applyclicks_all,
         });
-        // console.log(datapoints);
     })
     .on('end', () => {
         console.log('Section2: CSV file successfully processed');
-        //console.log(datapoints);
     });
 }
 
@@ -92,16 +90,13 @@ app.post("/section2", function(req, res) {
             res[value.date_created][1] += parseInt(value.applyclicks_all);
             return res;
         }, {});
-        console.log(pageViews);
-        // console.log("---");
-        // console.log(pageClicks);
+
     }
     res.send([pageViews,pageClicks]);
 });
 
 // Set the app to point to an "index" html file
 app.get('/', function(req, res) {
-    console.log(ans);
     res.sendFile(path.join(__dirname, 'index.html'));
 
 });

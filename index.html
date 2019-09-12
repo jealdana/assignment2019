@@ -21,14 +21,19 @@
                 success: function(data) {
                     var pageViews = data[0];
                     var pageClicks = data[1];
-                    var test = ["date","Page Views"];
-                    pageViews.push(test);
-                    console.log(pageViews.reverse());
+                    var viewsTitles = ["date","Page views"];
+                    pageViews.push(viewsTitles);
+
+                    var clicksTitles = ["date","Page clicks"];
+                    pageClicks.push(clicksTitles);
+                    pageViews.reverse();
+                    pageClicks.reverse();
 
                     google.charts.load('current', {'packages':['corechart']});
-                    google.charts.setOnLoadCallback(drawChart);
+                    google.charts.setOnLoadCallback(drawViewsChart);
+                    google.charts.setOnLoadCallback(drawClicksChart);
 
-                    function drawChart() {
+                    function drawViewsChart() {
                         var data = google.visualization.arrayToDataTable(pageViews
 
                         );
@@ -39,49 +44,23 @@
                             vAxis: {minValue: 0}
                         };
 
-                        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                        var chart = new google.visualization.AreaChart(document.getElementById('pageViewsContainer'));
                         chart.draw(data, options);
                     }
 
-                    anychart.onDocumentLoad(function() {
-                        // create data
+                    function drawClicksChart() {
+                        var data = google.visualization.arrayToDataTable(pageClicks);
 
-                        // create a chart
-                        chart = anychart.area();
-                        // set the chart title
-                        chart.title("All views by date");
-                        // set the titles of the axes
-                        chart.xAxis().title("Date");
-                        chart.yAxis().title("# of views");
-                        // create an area series and set the data
-                        var series = chart.area(pageViews);
-                        // set the container id
-                        chart.container("pageViewsContainer");
+                        var options = {
+                            title: 'Page clicks',
+                            hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+                            vAxis: {minValue: 0}
+                        };
 
-                        // initiate drawing the chart
-                        chart.draw();
+                        var chart = new google.visualization.AreaChart(document.getElementById('pageClicksContainer'));
+                        chart.draw(data, options);
+                    }
 
-                    });
-
-                    anychart.onDocumentLoad(function() {
-                        // create data
-
-                        // create a chart
-                        chart = anychart.area();
-                        // set the chart title
-                        chart.title("All clicks by date");
-                        // set the titles of the axes
-                        chart.xAxis().title("Date");
-                        chart.yAxis().title("# of clicks");
-                        // create an area series and set the data
-                        var series = chart.area(pageClicks);
-                        // set the container id
-                        chart.container("pageClicksContainer");
-
-                        // initiate drawing the chart
-                        chart.draw();
-
-                    });
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     var errorMsg = 'Ajax request failed: ' + xhr.responseText;
